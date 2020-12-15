@@ -256,42 +256,40 @@ namespace CourseProject {
         }
 
         public async void saveScore(int difficultyIndex) {
-            if (difficultyIndex != 3) {
-                string tableName = ((difficultyIndex == 0) ? "beginner" : (difficultyIndex == 1) ? "intermediate" : "expert");
+            string tableName = ((difficultyIndex == 0) ? "beginner" : (difficultyIndex == 1) ? "intermediate" : "expert");
 
-                if (!File.Exists("scoreboard.sqlite")) {
-                    SQLiteConnection.CreateFile("scoreboard.sqlite");
+            if (!File.Exists("scoreboard.sqlite")) {
+                SQLiteConnection.CreateFile("scoreboard.sqlite");
 
-                }
+            }
 
-                using (SQLiteConnection scoreboardConnection = new SQLiteConnection("Data Source=scoreboard.sqlite;")) {
-                    scoreboardConnection.Open();
+            using (SQLiteConnection scoreboardConnection = new SQLiteConnection("Data Source=scoreboard.sqlite;")) {
+                scoreboardConnection.Open();
 
-                    using (SQLiteCommand command = scoreboardConnection.CreateCommand()) {
-                        command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+                using (SQLiteCommand command = scoreboardConnection.CreateCommand()) {
+                    command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
 
-                        using (SQLiteDataReader reader = command.ExecuteReader()) {
-                            if (!reader.HasRows) {
-                                reader.Close();
+                    using (SQLiteDataReader reader = command.ExecuteReader()) {
+                        if (!reader.HasRows) {
+                            reader.Close();
 
-                                command.CommandText = $"CREATE TABLE '{tableName}' (" +
-                                    "'ID'    INTEGER NOT NULL UNIQUE," +
-                                    "'Player_Name'   TEXT NOT NULL," +
-                                    "'Time'  INTEGER NOT NULL," +
-                                    "PRIMARY KEY('ID' AUTOINCREMENT));";
+                            command.CommandText = $"CREATE TABLE '{tableName}' (" +
+                                "'ID'    INTEGER NOT NULL UNIQUE," +
+                                "'Player_Name'   TEXT NOT NULL," +
+                                "'Time'  INTEGER NOT NULL," +
+                                "PRIMARY KEY('ID' AUTOINCREMENT));";
 
-                                command.ExecuteNonQuery();
-                            }
-
+                            command.ExecuteNonQuery();
                         }
 
-                        command.CommandText = $"INSERT INTO {tableName} (Player_Name, Time) VALUES ('{PlayerName}', {CurrentTime})";
-
-                        await command.ExecuteNonQueryAsync();
                     }
+
+                    command.CommandText = $"INSERT INTO {tableName} (Player_Name, Time) VALUES ('{PlayerName}', {CurrentTime})";
+
+                    await command.ExecuteNonQueryAsync();
                 }
-                OnPropertyChanged("Scoreboard");
             }
+            OnPropertyChanged("Scoreboard");
         }
 
         public Stack<int[]> getEmptyFields(int y, int x) {

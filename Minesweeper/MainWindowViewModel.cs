@@ -229,13 +229,15 @@ namespace CourseProject {
                                         }
                                     }
 
-                                    if (MessageBox.Show($"Save your score?\nScore: {Model.PlayerName} - {Model.CurrentTime}",
-                                        "Save Score",
-                                        MessageBoxButton.YesNo,
-                                        MessageBoxImage.Question) == MessageBoxResult.Yes) {
+                                    if (DifficultyIndex != 3) {
+                                        if (MessageBox.Show($"Save your score?\nScore: {Model.PlayerName} - {Model.CurrentTime}",
+                                            "Save Score",
+                                            MessageBoxButton.YesNo,
+                                            MessageBoxImage.Question) == MessageBoxResult.Yes) {
 
-                                        Model.saveScore(DifficultyIndex);
+                                            Model.saveScore(DifficultyIndex);
 
+                                        }
                                     }
                                 }
                             }
